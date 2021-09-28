@@ -1,12 +1,13 @@
 import createDataContext from './createDataContext'
 import api from '../api/api';
 
+
 const authReducer = (state, action) => {
     switch (action.type) {
       case 'add_error':
         return { ...state, errorMessage: action.payload };
       case 'signin':
-        return { errorMessage: '', token: action.payload };
+        return { errorMessage: '', token: action.payload.token,user:action.payload.userData };
       case 'signout':
         return { token: null, errorMessage: '' };
       default:
@@ -15,16 +16,15 @@ const authReducer = (state, action) => {
   };
   
   
-  const signup = (dispatch) => async ({ email, password }) => {
+  const signup = (dispatch) => async ({ email, password },history) => {
     try {
-      const response = await api.post('api/auth/register', {
+      const response = await api.post('auth/register', {
         email,
         password,
       },{headers: {'Access-Control-Allow-Origin': '*'}});
       window.localStorage.setItem('token', response.data.token);
-      dispatch({ type: 'signin', payload: response.data.token });
-      console.log(response.data.data.role);
-  
+      dispatch({ type: 'signin', payload: response.data });
+      history.push('/home')
     } catch (err) {
       console.log(err);
       dispatch({
@@ -34,17 +34,16 @@ const authReducer = (state, action) => {
     }
   };
   
-  const signin = (dispatch) => async ({ email, password }) => {
+  const signin = (dispatch) => async ({ email, password },history) => {
     try {
-      console.log(email,password);
       const response = await api
-        .post('api/auth/login',{ email, password })
+        .post('auth/login',{ email, password })
         .catch((err) => {
           console.log(err);
         });
       window.localStorage.setItem('token', response.data.token);
-      dispatch({ type: 'signin', payload: response.data.token });
-     
+      dispatch({ type: 'signin', payload: response.data });
+      history.push('/home')
     } catch (err) {
       console.log(err);
       dispatch({
@@ -54,9 +53,10 @@ const authReducer = (state, action) => {
     }
   };
   
-  const signout = (dispatch) => async () => {
+  const signout = (dispatch) => async (history) => {
     window.localStorage.removeItem('token');
     dispatch({ type: 'signout' });
+    history.push("/login")
   };
   
   export const { Provider, Context } = createDataContext(

@@ -1,5 +1,6 @@
 import React, { useReducer } from 'react';
 
+// eslint-disable-next-line
 export default (reducer, actions, defaultValue) => {
   const Context = React.createContext();
 
