@@ -23,6 +23,7 @@ const authReducer = (state, action) => {
         password,
       },{headers: {'Access-Control-Allow-Origin': '*'}});
       window.localStorage.setItem('token', response.data.token);
+      window.localStorage.setItem('userId', response.data['userData'].id);
       dispatch({ type: 'signin', payload: response.data });
       history.push('/home')
     } catch (err) {
@@ -41,7 +42,10 @@ const authReducer = (state, action) => {
         .catch((err) => {
           console.log(err);
         });
+      console.log(response.data)
       window.localStorage.setItem('token', response.data.token);
+      window.localStorage.setItem('userId', response.data['userData'].id);
+      window.localStorage.setItem('role', response.data['userData'].role);
       dispatch({ type: 'signin', payload: response.data });
       history.push('/home')
     } catch (err) {
@@ -55,6 +59,9 @@ const authReducer = (state, action) => {
   
   const signout = (dispatch) => async (history) => {
     window.localStorage.removeItem('token');
+    window.localStorage.removeItem('userId');
+    window.localStorage.removeItem('role');
+
     dispatch({ type: 'signout' });
     history.push("/login")
   };
@@ -62,5 +69,5 @@ const authReducer = (state, action) => {
   export const { Provider, Context } = createDataContext(
     authReducer,
     { signin, signout, signup },
-    { token: null, errorMessage: '' }
+    { token: null, errorMessage: '',user:null }
   );

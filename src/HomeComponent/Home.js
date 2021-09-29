@@ -1,26 +1,28 @@
-import React, { useContext, useEffect, useState } from "react";
-import { Context as AuthContext } from "../context/AuthContext";
-import api from "../api/api";
+import React, { useState } from "react";
+import "./Home.css";
+import Grades from "../GradesComponent/Grades";
+import Welcome from "../WelcomeComponent/Welcome";
+import "./Home.css"
 
-const Home = () => {
-  const { state } = useContext(AuthContext);
-  const [worker, setWorker] = useState({});
+const Home = ({ worker }) => {
+  const [hidden, setHidden] = useState(true);
+  const { grades } = worker.worker.worker;
 
-  const fetchWorker = async (id) => {
-    api.get(`/workers/user/${id}`).then((res) => {
-      setWorker(res.data.worker);
-    });
+  const hideGrades = () => {
+    setHidden(!hidden);
   };
-
-  useEffect(() => {
-    fetchWorker(state.user.id);
-  }, [state]);
   return (
     <div>
-      <h1>Main Page</h1>
-      <h1>{worker.id}</h1>
-      <h1>{worker.fullName}</h1>
-      <h1>{worker.position}</h1>
+      {worker != null ? (
+        <div className="container">
+          <Welcome worker={worker.worker.worker} hideGrades={hideGrades} />
+          <div className="grades-container">
+            <Grades show={hidden} grades={grades[grades.length - 1]} />
+          </div>
+        </div>
+      ) : (
+        <div></div>
+      )}
     </div>
   );
 };
