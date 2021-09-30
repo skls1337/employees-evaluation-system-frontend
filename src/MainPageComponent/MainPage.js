@@ -10,10 +10,15 @@ import GradesList from "../GradesListComponent/GradesList";
 const MainPage = () => {
   const [option, setOption] = useState("home");
   const userId = localStorage.getItem("userId");
-  const { state, getworker } = useContext(WorkerContext);
+  const role =localStorage.getItem("role")
+  const { state, getworker,getworkers } = useContext(WorkerContext);
   useEffect(() => {
     getworker(userId);
+    if(role==1){
+      getworkers()
+    }
   }, []);
+  console.log(state)
   const changeOption = (option) => {
     setOption(option);
   };
@@ -22,7 +27,8 @@ const MainPage = () => {
       case "home":
         return <Home worker={state} />;
       case "users":
-        return <Workers />;
+        return state.workers? 
+        <div style={{height:"900px",overflowY:"scroll"}}><Workers workers={state.workers} /></div>: null;
       case "grades":
         console.log(state.worker.worker)
         return <GradesList grades={state.worker.worker.grades} />;

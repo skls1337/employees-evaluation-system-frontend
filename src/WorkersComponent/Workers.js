@@ -1,11 +1,19 @@
-import React from 'react'
+import React from "react";
+import Worker from '../WorkerComponent/Worker'
+import AOS from "aos";
+import "aos/dist/aos.css";
+import './Workers.css'
 
-const Users = () => {
+AOS.init();
+
+const Workers = ({ workers }) => {
+  const list = workers.map((worker) => {
     return (
-        <div>
-            <h1>Users component</h1>
-        </div>
-    )
-}
+      <Worker worker={worker}/>
+    );
+  });
 
-export default Users
+  return <div className="workers-list">{workers ? list : <div></div>}</div>;
+};
+
+export default Workers;
