@@ -11,7 +11,7 @@ const workerReducere = (state, action) => {
     case "add_error":
       return { ...state, errorMessage: action.payload };
     case "grade_worker":
-      return state;
+      return {...state,worker:action.payload};
     default:
       return state;
   }
@@ -66,8 +66,52 @@ const gradeworker =
     }
   };
 
+  const updategrade =
+  (dispatch) =>
+  async (
+    id,
+    { communicationLevel, teamWorkLevel, implicationLevel, serviceQualityLevel },gradeId
+  ) => {
+    try {
+      const response = await api.put(`workers/${id}/grade/${gradeId}`, {
+        communicationLevel,
+        teamWorkLevel,
+        implicationLevel,
+        serviceQualityLevel,
+      });
+      dispatch({ type: "grade_worker", payload: response.data });
+      
+    } catch (err) {
+      console.log(err);
+      dispatch({
+        type: "add_error",
+        payload: "Something went wrong with get worker",
+      });
+    }
+  };
+
+  const deletegrade =
+  (dispatch) =>
+  async (
+    id,gradeId
+  ) => {
+    try {
+      const response = await api.delete(`workers/${id}/grade/${gradeId}`);
+      dispatch({ type: "grade_worker", payload: response.data });
+      
+    } catch (err) {
+      console.log(err);
+      dispatch({
+        type: "add_error",
+        payload: "Something went wrong with get worker",
+      });
+    }
+  };
+
+
+
 export const { Provider, Context } = createDataContext(
   workerReducere,
-  { getworker, getworkers, gradeworker },
+  { getworker, getworkers, gradeworker,updategrade,deletegrade },
   { worker: null, errorMessage: "", workers: null }
 );

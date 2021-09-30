@@ -1,15 +1,24 @@
-import React,{useContext,useState} from "react";
-import {Context as WorkerContext} from '../context/WorkerContext'
+import React, { useContext, useState } from "react";
+import { Context as WorkerContext } from "../context/WorkerContext";
 import "../AuthComponent/Auth.scss";
 import "../GradesListComponent/GradesList.css";
 import "./GradeWorker.css";
 
-const GradeWorker = ({worker}) => {
-    const [communicationLevel,setCommunicationLevel]=useState(1)
-    const [implicationLevel,setImplicationLevel]=useState(1)
-    const [teamWorkLevel,setTeamWorkLevel]=useState(1)
-    const [serviceQualityLevel,setServiceQualityLevel]=useState(1)
-    const {gradeworker}=useContext(WorkerContext)
+const GradeWorker = ({ worker, grade, workerId }) => {
+  const [communicationLevel, setCommunicationLevel] = useState(
+    grade ? grade.communicationLevel : 1
+  );
+  const [implicationLevel, setImplicationLevel] = useState(
+    grade ? grade.implicationLevel : 1
+  );
+  const [teamWorkLevel, setTeamWorkLevel] = useState(
+    grade ? grade.teamWorkLevel : 1
+  );
+  const [serviceQualityLevel, setServiceQualityLevel] = useState(
+    grade ? grade.serviceQualityLevel : 1
+  );
+  const { getworkers, gradeworker, updategrade } = useContext(WorkerContext);
+
   return (
     <div className="background">
       <article className="grade-container">
@@ -18,7 +27,14 @@ const GradeWorker = ({worker}) => {
           className="grade-img"
         />
         <span className="grade-title-key">Communication</span>
-        <input className="input-grade-worker" type="number" max={10} min={1} onChange={(e)=>setCommunicationLevel(e.target.value)} />
+        <input
+          className="input-grade-worker"
+          type="number"
+          value={communicationLevel}
+          max={10}
+          min={1}
+          onChange={(e) => setCommunicationLevel(e.target.value)}
+        />
       </article>
       <article className="grade-container">
         <img
@@ -26,7 +42,14 @@ const GradeWorker = ({worker}) => {
           className="grade-img"
         />
         <span className="grade-title-key">Team Work</span>
-        <input class="input-grade-worker" type="number" max={10} min={1} onChange={(e)=>setTeamWorkLevel(e.target.value)}/>
+        <input
+          class="input-grade-worker"
+          type="number"
+          value={teamWorkLevel}
+          max={10}
+          min={1}
+          onChange={(e) => setTeamWorkLevel(e.target.value)}
+        />
       </article>
       <article className="grade-container" type="number" max={10} min={1}>
         <img
@@ -34,7 +57,14 @@ const GradeWorker = ({worker}) => {
           className="grade-img"
         />
         <span className="grade-title-key">Service Quality</span>
-        <input className="input-grade-worker" type="number" max={10} min={1} onChange={(e)=>setServiceQualityLevel(e.target.value)}/>
+        <input
+          className="input-grade-worker"
+          type="number"
+          value={serviceQualityLevel}
+          max={10}
+          min={1}
+          onChange={(e) => setServiceQualityLevel(e.target.value)}
+        />
       </article>
       <article className="grade-container">
         <img
@@ -42,9 +72,42 @@ const GradeWorker = ({worker}) => {
           className="grade-img"
         />
         <span className="grade-title-key">Implication</span>
-        <input className="input-grade-worker" type="number" max={10} min={1}onChange={(e)=>setImplicationLevel(e.target.value)} />
+        <input
+          value={implicationLevel}
+          className="input-grade-worker"
+          type="number"
+          max={10}
+          min={1}
+          onChange={(e) => setImplicationLevel(e.target.value)}
+        />
       </article>
-      <button className="submit fa fa-long-arrow-right margin-right" onClick={()=>gradeworker(worker.id,{communicationLevel,teamWorkLevel,implicationLevel,serviceQualityLevel})} />
+      <button
+        className="submit fa fa-long-arrow-right margin-right"
+        onClick={
+          worker
+            ? () => {
+                gradeworker(worker.id, {
+                  communicationLevel,
+                  teamWorkLevel,
+                  implicationLevel,
+                  serviceQualityLevel,
+                });
+              }
+            : () => {
+                updategrade(
+                  workerId,
+                  {
+                    communicationLevel,
+                    teamWorkLevel,
+                    implicationLevel,
+                    serviceQualityLevel,
+                  },
+                  grade.id
+                );
+                
+              }
+        }
+      />
     </div>
   );
 };

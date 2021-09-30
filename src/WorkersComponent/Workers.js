@@ -13,7 +13,7 @@ const Workers = ({ workers }) => {
     );
   });
 
-  return <div className="workers-list">{workers ? list : <div></div>}</div>;
+  return <div className="workers-list fade-in-top">{workers ? list : <div></div>}</div>;
 };
 
 export default Workers;
